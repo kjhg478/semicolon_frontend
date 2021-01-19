@@ -21,3 +21,19 @@ export const CREATE_ACCOUNT = gql`
     )
   }
 `;
+
+export const CONFIRM_SECRET = gql`
+  mutation confirmSecret($email : String! , $secret : String!
+  ){
+    confirmSecret (email : $email
+    secret:$secret
+    )
+  } 
+`;
+
+export const LOG_USER_IN = gql`
+  mutation logUserIn($token : String!
+  ){
+    logUserIn (token:$token) @client
+  } 
+`;

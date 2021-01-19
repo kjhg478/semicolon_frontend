@@ -24,7 +24,7 @@ const StateChanger = styled(Box)`
 `;
 
 const Link = styled.span`
-  color: ${props => props.theme.blueColor};
+  color: ${props => props.theme.ivoryColor};
   cursor: pointer;
 `;
 
@@ -53,32 +53,33 @@ export default ({
   lastName,
   email,
   setAction,
-  onSubmit,
-  secret
+  secret,
+  onSubmit
 }) => (
   <Wrapper>
     <Form>
-            {action === "logIn" && (
-                <form onSubmit={onSubmit}>
-                    <Input placeholder={"Email"} {...email} type="email" />
-                    <Button text={"Log in"} />
-                </form>
-            )} 
-            {action === "signUp" && (
+      {action === "logIn" && (
+        <form onSubmit={onSubmit}>
+          <Input placeholder={"Email"} {...email} type="email" />
+          <Button text={"Log in"} />
+        </form>
+      )}{ action === 'signUp' && (
         <form onSubmit={onSubmit}>
           <Input placeholder={"First name"} {...firstName} />
           <Input placeholder={"Last name"} {...lastName} />
           <Input placeholder={"Email"} {...email} type="email" />
           <Input placeholder={"Username"} {...username} />
           <Button text={"Sign up"} />
-        </form> 
-        )}
-        {action === "confirm" && <form onSubmit={onSubmit}>
-            <Input placeholder="Paste your secret" required {...secret} />
-            <Button text={"Confirm"}/>
-        </form>}    
+        </form>
+      )}
+      {action === 'confirm' && <form onSubmit={onSubmit}>
+        <Input placeholder="전송된 값을 입력해주세요!" required {...secret} />
+        <Button text={'Confirm'} />
+        </form>
+        }
     </Form>
-    <StateChanger>
+    {action !== 'confirm' && (
+      <StateChanger>
       {action === "logIn" ? (
         <>
           Don't have an account?{" "}
@@ -90,6 +91,6 @@ export default ({
           <Link onClick={() => setAction("logIn")}>Log in</Link>
         </>
       )}
-    </StateChanger>
+    </StateChanger>)}
   </Wrapper>
 );
