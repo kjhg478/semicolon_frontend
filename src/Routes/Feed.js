@@ -58,6 +58,7 @@ export default () => {
                 id={post.id}
                 user={post.user}
                 files={post.files}
+                caption={post.caption}
                 likeCount={post.likeCount}
                 isLiked={post.isLiked}
                 comments={post.comments}
