@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { Link, withRouter } from "react-router-dom";
 import Input from "./Input";
 import useInput from "../Hooks/useInput";
-import { gql } from "apollo-boost";
 import { Compass, HeartEmpty, User, Logo } from "./Icons";
 import { useQuery } from "react-apollo-hooks";
 import { ME } from "../SharedQueries";
@@ -22,7 +21,7 @@ const Header = styled.header`
   justify-content: center;
   align-items: center;
   padding: 25px 0px;
-  z-index: 2;
+  z-index:2;
 `;
 
 const HeaderWrapper = styled.div`
@@ -65,32 +64,26 @@ const HeaderLink = styled(Link)`
   }
 `;
 
-
-
-// history는 props 안에 있음
-export default withRouter(({history}) => {
+export default withRouter (({history}) => {
     const search = useInput("");
-    const {data} = useQuery(ME);
+    const { data } = useQuery(ME);
     
-    const onSearchSubmit = (e) => {
+    const onSearchSubmit = e => {
         e.preventDefault();
-        history.push(`/search?term=${search.value}`)
+        history.push(`/search?term=${search.value}`);
     };
+    
   return (
     <Header>
       <HeaderWrapper>
         <HeaderColumn>
-           <Link to="/"> 
-            <Logo></Logo>
-           </Link>
+          <Link to="/">
+            <Logo />
+          </Link>
         </HeaderColumn>
         <HeaderColumn>
           <form onSubmit={onSearchSubmit}>
-            <SearchInput
-              value={search.value}
-              onChange={search.onChange}
-              placeholder="Search"
-            />
+            <SearchInput value={search.value} onChange={search.onChange} placeholder="Search" />
           </form>
         </HeaderColumn>
         <HeaderColumn>
@@ -100,13 +93,16 @@ export default withRouter(({history}) => {
           <HeaderLink to="/notifications">
             <HeartEmpty />
           </HeaderLink>
-            {!data? <HeaderLink to="/#">
-            <User />
-            </HeaderLink> : <HeaderLink to={data.me.user.username}>
-            <User />
-          </HeaderLink>}
+            {!data ?
+                <HeaderLink to="/#">
+                <User />
+                </HeaderLink> :
+                <HeaderLink to={data.me.user.username}>
+                    <User />
+                </HeaderLink>
+            }       
         </HeaderColumn>
       </HeaderWrapper>
     </Header>
-    );
+  );
 });

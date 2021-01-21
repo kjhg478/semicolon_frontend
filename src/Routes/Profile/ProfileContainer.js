@@ -1,14 +1,15 @@
 import React from "react";
 import { gql } from "apollo-boost";
 import { withRouter } from "react-router-dom";
-import { useQuery } from "react-apollo-hooks";
+import { useMutation, useQuery } from "react-apollo-hooks";
 import ProfilePresenter from "./ProfilePresenter";
+import { LOG_USER_OUT } from "../Auth/AuthQueries";
 
 const GET_USER = gql`
   query seeUser($username: String!) {
-    seeUser(username: $username) {
-      user {
-      id
+seeUser(username: $username) {
+   user{
+	  id
       avatar
       username
       fullName
@@ -18,21 +19,24 @@ const GET_USER = gql`
       followingCount
       followersCount
       postsCount
-      }
-      posts {
+    }
+    posts{
+    id
+    likeCount
+    commentCount
+      files{
         id
-        likeCount
-        commentCount
-        files {
-          id
-          url
-        }
+        url
       }
+     } 
     }
   }
 `;
 
+
+
 export default withRouter(({ match: { params: { username } } }) => {
   const { data, loading } = useQuery(GET_USER, { variables: { username } });
-  return <ProfilePresenter loading={loading} data={data} />;
+  const [logOut] = useMutation(LOG_USER_OUT);
+  return <ProfilePresenter loading={loading} logOut={logOut} data={data} />;
 });

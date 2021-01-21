@@ -6,7 +6,6 @@ import { useMutation } from "react-apollo-hooks";
 import { TOGGLE_LIKE, ADD_COMMENT } from "./PostQueries";
 import { toast } from "react-toastify";
 
-
 const PostContainer = ({
   id,
   user,
@@ -20,8 +19,8 @@ const PostContainer = ({
 }) => {
   const [isLikedS, setIsLiked] = useState(isLiked);
   const [likeCountS, setLikeCount] = useState(likeCount);
-  const [currentItem, setCurrentItem] = useState(0);
   const [selfComments, setSelfComments] = useState([]);
+  const [currentItem, setCurrentItem] = useState(0);
   const comment = useInput("");
   const [toggleLikeMutation] = useMutation(TOGGLE_LIKE, {
     variables: { postId: id }
@@ -42,6 +41,7 @@ const PostContainer = ({
   }, [currentItem]);
 
   const toggleLike = () => {
+    toggleLikeMutation();
     if (isLikedS === true) {
       setIsLiked(false);
       setLikeCount(likeCountS - 1);
@@ -49,22 +49,18 @@ const PostContainer = ({
       setIsLiked(true);
       setLikeCount(likeCountS + 1);
     }
-    toggleLikeMutation();
   };
 
   const onKeyPress = async event => { 
     const { which } = event;
-    if (which === 13) {
+    if (which === 13) { 
       event.preventDefault();
       try {
-        const {
-          data : { addComment }
-        } = await addCommentMutation();
+        const { data: { addComment } } = await addCommentMutation();
         setSelfComments([...selfComments, addComment]);
         comment.setValue("");
-      } catch (error) {
-        console.log(error);
-        toast.error("Can`t send comment");
+      } catch { 
+        toast.error("댓글을 작성할수 없어요 (￣﹏￣；)")
       }
     }
   };

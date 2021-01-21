@@ -65,4 +65,5 @@ SquarePost.propTypes = {
             url: PropTypes.string.isRequired
         }).isRequired
 };
+
 export default SquarePost;

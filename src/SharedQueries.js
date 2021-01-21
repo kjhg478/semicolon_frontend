@@ -1,10 +1,12 @@
-import { gql } from "apollo-boost";
+import { gql } from 'apollo-boost';
+
 
 export const ME = gql`
     {
         me {
-            user {
-                username
+            user{
+                username,
+                email
             }
         }
     }
