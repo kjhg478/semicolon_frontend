@@ -1,10 +1,10 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import TextareaAutosize from "react-autosize-textarea";
 import FatText from "../FatText";
-import { Link } from "react-router-dom";
 import Avatar from "../Avatar";
-import { HeartFull, HeartEmpty, Comment as CommentIcon } from "../Icons";
+import { Link } from "react-router-dom";
+import { HeartFull, HeartEmpty, Comment as CommentIcon} from "../Icons";
 
 const Post = styled.div`
   ${props => props.theme.whiteBox};
@@ -12,7 +12,7 @@ const Post = styled.div`
   max-width: 600px;
   user-select: none;
   margin-bottom: 25px;
-  a {
+  a{
     color:inherit;
   }
 `;
@@ -72,17 +72,6 @@ const Buttons = styled.div`
   margin-bottom: 10px;
 `;
 
-const Comments = styled.ul`
-  margin-top : 10px;
-`;
-
-const Comment = styled.li`
-  margin-bottom : 7px;
-  span {
-    margin-right : 5px;
-  }
-`;
-
 const Timestamp = styled.span`
   font-weight: 400;
   text-transform: uppercase;
@@ -105,74 +94,128 @@ const Textarea = styled(TextareaAutosize)`
   font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 `;
 
-const Caption = styled.div``;
+const Comments = styled.ul`
+  margin-top:10px;
+`;
+
+const Comment = styled.li`
+  margin-bottom:7px;
+  span{
+    margin-right:5px;
+  }
+`;
+
+// const Caption = styled.div`
+//   margin-top : 15px;
+//   margin-left : 10px;
+//   margin-bottom:7px;
+// `;
+
+
+const Caption = styled.div`
+  margin : 10px 0px
+`;
+
+
+
+
+
 
 export default ({
   user: { username, avatar },
   location,
   files,
   isLiked,
+  commentLike,
   likeCount,
   createdAt,
   newComment,
+  caption,
   currentItem,
   toggleLike,
-  onKeyPress,
+  onKeyUp,
   comments,
-  selfComments,
-  caption
+  delComment,
+  commentLiked,
+  replyComment,
+  modifyComment,
+  openRelpy
 }) => (
-  <Post>
-    <Header>
-      <Avatar size="sm" url={avatar} />
-      <UserColumn>
-        <Link to={`/${username}`}>
-          <FatText text={username} />
-        </Link>
-        <Location>{location}</Location>
-      </UserColumn>
-    </Header>
-    <Files>
-      {files &&
-        files.map((file, index) => (
-          <File key={file.id} src={file.url} showing={index === currentItem} />
-        ))}
-    </Files>
-    <Meta>
-      <Buttons>
-        <Button onClick={toggleLike}>
-          {isLiked ? <HeartFull /> : <HeartEmpty />}
-        </Button>
-        <Button>
+
+    <Post>
+      <Header>
+        <Avatar size="sm" url={avatar} />
+        <UserColumn>
+          <Link to={`/${username}`}>
+            <FatText text={username} />
+          </Link>
+          <Location>{location}</Location>
+        </UserColumn>
+      </Header>
+      <Files>
+        {files &&
+
+          files.map((file, index) => (
+            <File key={file.id} src={file.url} showing={index === currentItem} />
+          ))}
+      </Files>
+      {/* <Caption>{caption}</Caption>  */}
+      <Meta>
+        <Buttons>
+          <Button onClick={toggleLike}>
+            {isLiked ? <HeartFull /> : <HeartEmpty />}
+          </Button>
+          <Button>
+            -
           <CommentIcon />
-        </Button>
-      </Buttons>
-      <FatText text={likeCount === 1 ? "1 like" : `${likeCount} likes`} />
-      <Caption>
-        <FatText text={username} /> {caption}
-      </Caption>
-            {comments && (
-        <Comments>
-          {comments.map(comment => (
-            <Comment key={comment.id}>
-              <FatText text={comment.user.username} />
+          </Button>
+        </Buttons>
+        <FatText text={likeCount === 1 ? "1 like" : `${likeCount} likes`} />
+        <Caption><FatText text={username} />{caption}</Caption>
+        {comments && (
+          <Comments>
+          
+          {comments.map((comment, index, event) => (
+            <Comment key={comment.id} index={index}>
+            <FatText text={comment.user.username} />
               {comment.text}
-            </Comment>
+              <Button onClick={() => modifyComment(comment.id)}>
+                    수정
+              </Button>
+              <Button onClick={() => delComment(comment.id, index)}>
+                삭제
+              </Button>
+              <Button onClick={()=> commentLiked(comment.id)}>
+                    {commentLike ? <HeartFull /> : <HeartEmpty />}
+              </Button>
+ 
+              <Button onClick={()=> replyComment(comment.id, comment.user.username, event)}>
+                답글 달기  
+              </Button>
+              <Timestamp>{createdAt}</Timestamp>
+                            
+              </Comment>
           ))}
 
-          {selfComments.map(comment => (
-            <Comment key={comment.id}>
-              <FatText text={comment.user.username} />
-              {comment.text}
-            </Comment>
-          ))}
-        </Comments>
-      )}
-      <Timestamp>{createdAt}</Timestamp>
-      <Textarea placeholder={"Add a comment..."}
-        value={newComment.value}
-        onChange={newComment.onChange}
-        onKeyPress={onKeyPress} />
-    </Meta>
-  </Post>
-);
+              {openRelpy &&
+                <Textarea
+                  placeholder={"Add a comment..."}
+                  value={newComment.value}
+                  onChange={newComment.onChange}
+                  onKeyPress={onKeyUp}
+                />
+              }
+          </Comments>
+        )}
+        
+          
+          <Textarea
+            placeholder={"Add a comment..."}
+            value={newComment.value}
+            onChange={newComment.onChange}
+            onKeyPress={onKeyUp}
+          />
+       
+      </Meta>
+    </Post>
+  );

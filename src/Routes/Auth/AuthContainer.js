@@ -12,6 +12,7 @@ export default () => {
   const secret = useInput("");
   const lastName = useInput("");
   const email = useInput("");
+  
   const [requestSecretMutation] = useMutation(LOG_IN, {
     variables: { email: email.value }
   });
@@ -23,7 +24,6 @@ export default () => {
       lastName: lastName.value
     }
   });
-
   const [confirmSecretMutation] = useMutation(CONFIRM_SECRET, {
     variables: {
       email: email.value,
@@ -33,14 +33,13 @@ export default () => {
 
   const [logUserInMutation] = useMutation(LOG_USER_IN)
 
-
-
   const onSubmit = async e => {
     e.preventDefault();
     if (action === "logIn") {
       if (email.value !== "") {
         try {
           const { data: { requestSecret } } = await requestSecretMutation();
+          console.log(requestSecret);
           if (!requestSecret) {
             toast.error("Woops!, 등록된 정보가 없어요! 회원가입으로 안내해 드릴게요!");
             setTimeout(() => setAction("signUp"), 3000);
@@ -84,7 +83,7 @@ export default () => {
           } else {
             throw Error();
           } 
-        } catch { 
+        } catch (e) { 
           toast.error('Woops! 비밀코드가 일치하지 않아요!');
         }
       }

@@ -28,7 +28,6 @@ const Avatar = ({ size = "sm", url, className }) => (
   <Container className={className} size={size} url={url} />
 );
 
-
 Avatar.propTypes = {
   size: PropTypes.oneOf(["sm", "md", "lg"]),
   url: PropTypes.string.isRequired

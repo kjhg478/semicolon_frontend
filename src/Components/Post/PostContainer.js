@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+
 import PropTypes from "prop-types";
 import useInput from "../../Hooks/useInput";
 import PostPresenter from "./PostPresenter";
 import { useMutation } from "react-apollo-hooks";
-import { TOGGLE_LIKE, ADD_COMMENT } from "./PostQueries";
+import { TOGGLE_LIKE, ADD_COMMENT, DELETE_COMMENT } from "./PostQueries";
 import { toast } from "react-toastify";
+
 
 const PostContainer = ({
   id,
@@ -15,19 +17,29 @@ const PostContainer = ({
   comments,
   createdAt,
   caption,
-  location
+  location,
+  avatar,
+  commentLike
 }) => {
+  console.log('1', commentLike);
   const [isLikedS, setIsLiked] = useState(isLiked);
   const [likeCountS, setLikeCount] = useState(likeCount);
-  const [selfComments, setSelfComments] = useState([]);
   const [currentItem, setCurrentItem] = useState(0);
-  const comment = useInput("");
+  const [cLikedS, setcLiked] = useState(commentLike);
+  const [openRelpy, setOpenRelpy] = useState(false);
   const [toggleLikeMutation] = useMutation(TOGGLE_LIKE, {
     variables: { postId: id }
   });
+  const comment = useInput("");
+  const [selfComments, setSelfComments] = useState([...comments]);
+  
   const [addCommentMutation] = useMutation(ADD_COMMENT, {
     variables: { postId: id, text: comment.value }
   });
+  const [replyCommentMutation] = useMutation(ADD_COMMENT, {
+  variables: { postId: id, text: comment.value }
+  });
+  const [removeCommentMutation] = useMutation(DELETE_COMMENT);
   const slide = () => {
     const totalFiles = files.length;
     if (currentItem === totalFiles - 1) {
@@ -51,20 +63,69 @@ const PostContainer = ({
     }
   };
 
-  const onKeyPress = async event => { 
+  const onKeyUp = async event => {
+    console.log(event)
     const { which } = event;
-    if (which === 13) { 
+    if (which === 13) {
       event.preventDefault();
       try {
-        const { data: { addComment } } = await addCommentMutation();
+        const {
+          data: { addComment }
+        } = await addCommentMutation();
         setSelfComments([...selfComments, addComment]);
         comment.setValue("");
-      } catch { 
-        toast.error("댓글을 작성할수 없어요 (￣﹏￣；)")
+      } catch {
+        toast.error("Can't send comment 😔");
       }
+      
     }
   };
+  const delComment = async (comments, num) => {
+    console.log('1', comments, num);
+    
+    await removeCommentMutation({ variables: { id: comments } })
 
+    // setSelfComments(...selfComments.filter((selfComments) => {
+    // return selfComments.id !== comments;
+    // }))
+    setSelfComments([...selfComments].filter(comment => comment.id !== comments))
+    console.log('2', selfComments);
+  }
+
+
+  const commentLiked = (comments) => {
+    const like = [...selfComments].find(comment => comment.id === comments)
+    console.log(comments, like.id)
+    toggleLikeMutation();
+    if (like.id === comments && cLikedS === true) {
+      setcLiked(false);
+    }
+      else {
+      setcLiked(true);
+      }
+  }
+
+  const replyComment = async (commentid, user, event) => {
+      setOpenRelpy(!openRelpy);
+      console.log(commentid, user, event);
+      const { which } = event;
+      if (which === 13) {
+      event.preventDefault();
+      try {
+        const {
+          data: { addComment }
+        } = await replyCommentMutation();
+        setSelfComments([...selfComments, addComment]);
+        comment.setValue(user);
+      } catch {
+        toast.error("Can't send comment 😔");
+      }
+      
+    }
+  }
+  
+  
+ 
   return (
     <PostPresenter
       user={user}
@@ -73,15 +134,20 @@ const PostContainer = ({
       location={location}
       caption={caption}
       isLiked={isLikedS}
-      comments={comments}
+      commentLike={cLikedS}
+      comments={selfComments}
       createdAt={createdAt}
       newComment={comment}
       setIsLiked={setIsLiked}
       setLikeCount={setLikeCount}
       currentItem={currentItem}
       toggleLike={toggleLike}
-      onKeyPress={onKeyPress}
-      selfComments={selfComments}
+      onKeyUp={onKeyUp}
+      avatar={avatar}
+      commentLiked={commentLiked}
+      delComment={delComment}
+      replyComment={replyComment}
+      openRelpy={openRelpy}
     />
   );
 };

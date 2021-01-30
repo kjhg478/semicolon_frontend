@@ -3,16 +3,18 @@ import PropTypes from "prop-types";
 import { Route, Switch, Redirect } from "react-router-dom";
 import Auth from "../Routes/Auth";
 import Feed from "../Routes/Feed";
-import Search from '../Routes/Search';
-import Profile from '../Routes/Profile/index';
-import Explore from '../Routes/Explore';
+import Profile from "../Routes/Profile/index";
+import Explore from "../Routes/Explore";
+import Search from "../Routes/Search";
+import DetailPost from "../Routes/DetailPost";
 
 const LoggedInRoutes = () => (
   <Switch>
     <Route exact path="/" component={Feed} />
-    <Route exact path="/search" component={Search} />
     <Route exact path="/explore" component={Explore} />
+    <Route exact path="/search" component={Search} />
     <Route exact path="/:username" component={Profile} />
+    <Route exact path="/post/:postid" component={DetailPost} />
     <Redirect from="*" to="/" />
   </Switch>
 );
@@ -25,7 +27,7 @@ const LoggedOutRoutes = () => (
 );
 
 const AppRouter = ({ isLoggedIn }) => (
-  isLoggedIn?<LoggedInRoutes /> : <LoggedOutRoutes />
+  <Switch>{isLoggedIn ? <LoggedInRoutes /> : <LoggedOutRoutes />}</Switch>
 );
 
 AppRouter.propTypes = {

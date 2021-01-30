@@ -3,13 +3,11 @@ import { gql } from "apollo-boost";
 import { withRouter } from "react-router-dom";
 import { useMutation, useQuery } from "react-apollo-hooks";
 import ProfilePresenter from "./ProfilePresenter";
-import { LOG_USER_OUT } from "../Auth/AuthQueries";
 
 const GET_USER = gql`
   query seeUser($username: String!) {
-seeUser(username: $username) {
-   user{
-	  id
+    seeUser(username: $username) {
+      id
       avatar
       username
       fullName
@@ -19,24 +17,25 @@ seeUser(username: $username) {
       followingCount
       followersCount
       postsCount
-    }
-    posts{
-    id
-    likeCount
-    commentCount
-      files{
+      posts {
         id
-        url
+        files {
+          url
+        }
+        likeCount
+        commentCount
       }
-     } 
     }
   }
 `;
 
-
+export const LOG_OUT = gql`
+  mutation logUserOut {
+    logUserOut @client
+}`
 
 export default withRouter(({ match: { params: { username } } }) => {
   const { data, loading } = useQuery(GET_USER, { variables: { username } });
-  const [logOut] = useMutation(LOG_USER_OUT);
-  return <ProfilePresenter loading={loading} logOut={logOut} data={data} />;
+  const [logOut] = useMutation(LOG_OUT);
+    return <ProfilePresenter loading={loading} logOut={logOut} data={data} />;
 });

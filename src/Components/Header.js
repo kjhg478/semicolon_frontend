@@ -1,4 +1,3 @@
-  
 import React from "react";
 import styled from "styled-components";
 import { Link, withRouter } from "react-router-dom";
@@ -20,8 +19,8 @@ const Header = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 25px 0px;
-  z-index:2;
+  padding: 10px 0px;
+  z-index: 2;
 `;
 
 const HeaderWrapper = styled.div`
@@ -64,15 +63,13 @@ const HeaderLink = styled(Link)`
   }
 `;
 
-export default withRouter (({history}) => {
-    const search = useInput("");
-    const { data } = useQuery(ME);
-    
-    const onSearchSubmit = e => {
-        e.preventDefault();
-        history.push(`/search?term=${search.value}`);
-    };
-    
+export default withRouter(({ history }) => {
+  const search = useInput("");
+  const { data } = useQuery(ME);
+  const onSearchSubmit = e => {
+    e.preventDefault();
+    history.push(`/search?term=${search.value}`);
+  };
   return (
     <Header>
       <HeaderWrapper>
@@ -83,7 +80,11 @@ export default withRouter (({history}) => {
         </HeaderColumn>
         <HeaderColumn>
           <form onSubmit={onSearchSubmit}>
-            <SearchInput value={search.value} onChange={search.onChange} placeholder="Search" />
+            <SearchInput
+              value={search.value}
+              onChange={search.onChange}
+              placeholder="Search"
+            />
           </form>
         </HeaderColumn>
         <HeaderColumn>
@@ -93,14 +94,13 @@ export default withRouter (({history}) => {
           <HeaderLink to="/notifications">
             <HeartEmpty />
           </HeaderLink>
-            {!data ?
-                <HeaderLink to="/#">
-                <User />
-                </HeaderLink> :
-                <HeaderLink to={data.me.user.username}>
-                    <User />
-                </HeaderLink>
-            }       
+          {!data ? (<HeaderLink to="/#">
+              <User />
+            </HeaderLink>) : 
+            (<HeaderLink to={data.me.username}>
+              <User />
+            </HeaderLink>)
+          }
         </HeaderColumn>
       </HeaderWrapper>
     </Header>

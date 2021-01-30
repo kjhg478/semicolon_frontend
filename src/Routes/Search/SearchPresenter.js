@@ -25,7 +25,6 @@ const PostSection = styled(Section)`
   grid-auto-rows: 200px;
 `;
 
-
 const SearchPresenter = ({ searchTerm, loading, data }) => {
   if (searchTerm === undefined) {
     return (
@@ -46,14 +45,14 @@ const SearchPresenter = ({ searchTerm, loading, data }) => {
           {data.searchUser.length === 0 ? (
             <FatText text="No Users Found" />
           ) : (
-              data.searchUser.map((user) => (
+            data.searchUser.map(user => (
               <UserCard
                 key={user.id}
                 username={user.username}
                 isFollowing={user.isFollowing}
                 url={user.avatar}
                 isSelf={user.isSelf}
-                id={ user.id }
+                id={user.id}
               />
             ))
           )}
@@ -62,8 +61,9 @@ const SearchPresenter = ({ searchTerm, loading, data }) => {
           {data.searchPost.length === 0 ? (
             <FatText text="No Posts Found" />
           ) : (
-                data.searchPost.map((post) => (
-              <SquarePost
+           data.searchPost.map(post => (
+             <SquarePost
+               postid={post.id}
                 key={post.id}
                 likeCount={post.likeCount}
                 commentCount={post.commentCount}
@@ -72,6 +72,7 @@ const SearchPresenter = ({ searchTerm, loading, data }) => {
             ))
           )}
         </PostSection>
+        {/* <div id="content"></div> */}
       </Wrapper>
     );
   }

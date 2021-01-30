@@ -1,1 +1,1 @@
-export default () => "Explore";
+export default () => <><a>Explore</a></>;
