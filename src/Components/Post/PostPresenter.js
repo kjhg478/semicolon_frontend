@@ -5,6 +5,9 @@ import FatText from "../FatText";
 import Avatar from "../Avatar";
 import { Link } from "react-router-dom";
 import { HeartFull, HeartEmpty, Comment as CommentIcon} from "../Icons";
+import Popup from 'reactjs-popup';
+import DetailPost from "../DetailPost/index";
+import "../../Styles/Post.css";
 
 const Post = styled.div`
   ${props => props.theme.whiteBox};
@@ -116,32 +119,37 @@ const Caption = styled.div`
   margin : 10px 0px
 `;
 
+const CommentCount = styled.span`
+  font-weight: 400;
+  opacity: 0.6;
+  display: block;
+  font-size: 12px;
+  margin: 5px 0px;
+  padding-bottom: 4px;
+  cursor: pointer;
+`;
 
 
 
 
 
 export default ({
-  user: { username, avatar },
-  location,
-  files,
-  isLiked,
-  commentLike,
-  likeCount,
-  createdAt,
-  newComment,
-  caption,
-  currentItem,
-  toggleLike,
-  onKeyUp,
-  comments,
-  delComment,
-  commentLiked,
-  replyComment,
-  modifyComment,
-  openRelpy
-}) => (
-
+    user: { username, avatar },
+    user,
+    id,
+    location,
+    files,
+    isLiked,
+    likeCount,
+    createdAt,
+    newComment,
+    caption,
+    currentItem,
+    toggleLike,
+    onKeyUp,
+    comments,
+    selfComments
+  }) => (
     <Post>
       <Header>
         <Avatar size="sm" url={avatar} />
@@ -166,56 +174,71 @@ export default ({
             {isLiked ? <HeartFull /> : <HeartEmpty />}
           </Button>
           <Button>
-            -
-          <CommentIcon />
+          
+            <CommentIcon />
           </Button>
         </Buttons>
         <FatText text={likeCount === 1 ? "1 like" : `${likeCount} likes`} />
-        <Caption><FatText text={username} />{caption}</Caption>
+        <Caption><FatText text={username} /> {caption} </Caption>
+        {PopupPost(id,user,files,likeCount,caption,avatar,isLiked,comments,createdAt)}
         {comments && (
           <Comments>
-          
-          {comments.map((comment, index, event) => (
-            <Comment key={comment.id} index={index}>
-            <FatText text={comment.user.username} />
-              {comment.text}
-              <Button onClick={() => modifyComment(comment.id)}>
-                    수정
-              </Button>
-              <Button onClick={() => delComment(comment.id, index)}>
-                삭제
-              </Button>
-              <Button onClick={()=> commentLiked(comment.id)}>
-                    {commentLike ? <HeartFull /> : <HeartEmpty />}
-              </Button>
- 
-              <Button onClick={()=> replyComment(comment.id, comment.user.username, event)}>
-                답글 달기  
-              </Button>
-              <Timestamp>{createdAt}</Timestamp>
-                            
+            {/* {comments.map(comment => (
+              <Comment key={comment.id}>
+                <Link to={`/${comment.user.username}`}>
+                  <FatText text={comment.user.username} />
+                  </Link>
+                {comment.text}
               </Comment>
-          ))}
-
-              {openRelpy &&
-                <Textarea
-                  placeholder={"Add a comment..."}
-                  value={newComment.value}
-                  onChange={newComment.onChange}
-                  onKeyPress={onKeyUp}
-                />
-              }
+            ))} */}
+            {selfComments.map(comment => (
+              <Comment key={comment.id}>
+                 <Link to={`/${comment.user.username}`}>
+                  <FatText text={comment.user.username} />
+                  </Link>
+                {comment.text}
+              </Comment>
+            ))}
           </Comments>
         )}
-        
-          
-          <Textarea
-            placeholder={"Add a comment..."}
-            value={newComment.value}
-            onChange={newComment.onChange}
-            onKeyPress={onKeyUp}
-          />
-       
+        <Timestamp>{createdAt}</Timestamp>
+        <Textarea
+          placeholder={"Add a comment..."}
+          value={newComment.value}
+          onChange={newComment.onChange}
+          onKeyPress={onKeyUp} />
       </Meta>
     </Post>
+  );
+
+
+const PopupPost = (id,user,files,likeCount,caption,avatar,isLiked,comments,createdAt) => (
+  
+  <Popup trigger={comments.length === 0 ?<CommentCount> </CommentCount> :<CommentCount>댓글 {comments.length}개 더보기</CommentCount> } modal nested>
+    {close => (
+      <div className="modal">
+        <button className="close" onClick={close}>
+          &times;
+        </button>
+        
+        <div className="content">
+            {' '}
+             <DetailPost key={id}
+                    id={id}
+                    user={user}
+                    files={files}
+                    likeCount={likeCount}
+                    caption={caption}
+                    avatar={avatar}
+                    isLiked={isLiked}
+                    comments={comments}
+                    createdAt={createdAt}
+                />
+        </div>
+        <div className="actions">
+        
+        </div>
+      </div>
+    )}
+  </Popup>
   );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 import { Helmet } from "rl-react-helmet";
 import Loader from "../../Components/Loader";
@@ -7,6 +7,28 @@ import FatText from "../../Components/FatText";
 import FollowButton from "../../Components/FollowButton";
 import SquarePost from "../../Components/SquarePost";
 import Button from "../../Components/Button";
+import { Link } from "react-router-dom";
+import Popup from 'reactjs-popup'; 
+//import "../../Styles/PopUp.css";
+
+
+const Users = styled.ul`
+  margin-top:10px;
+`;
+
+const User = styled.li`
+  margin-bottom:10px;
+  span{
+    margin-right:5px;
+  }
+  display : flex;
+  border-bottom: ${props => props.theme.lightGreyColor} 1px solid;
+`;
+
+const Caption = styled.div`
+  margin : 10px 0px
+`;
+
 
 const Wrapper = styled.div`
   min-height: 100vh;
@@ -22,6 +44,15 @@ const Header = styled.header`
 `;
 
 const HeaderColumn = styled.div``;
+
+const Div = styled.div`
+width : 60px;
+align-items: right; 
+text-align:right;
+margin-left:auto;
+
+ `;
+
 
 const UsernameRow = styled.div`
   display: flex;
@@ -43,6 +74,7 @@ const Count = styled.li`
   &:not(:last-child) {
     margin-right: 10px;
   }
+  cursor: pointer;
 `;
 
 const FullName = styled(FatText)`
@@ -51,6 +83,23 @@ const FullName = styled(FatText)`
 
 const Bio = styled.p`
   margin: 10px 0px;
+`;
+
+const FullNameF = styled.span`
+  font-weight: 400;
+  text-transform: uppercase;
+  opacity: 0.5;
+  display: block;
+  font-size: 12px;
+  margin: 10px 0px;
+  padding-bottom: 10px;
+  
+  width: 90px;
+    overflow: hidden;
+    height: 13px
+`;
+
+const UserDetail = styled.div`
 `;
 
 const Posts = styled.div`
@@ -71,10 +120,12 @@ export default ({ loading, data, logOut }) => {
         const {
             seeUser: {
                 id,
-                avatar,
+            avatar,
                 username,
                 fullName,
-                isFollowing,
+            isFollowing,
+            followers,
+                following,
                 isSelf,
                 bio,
                 followingCount,
@@ -86,7 +137,7 @@ export default ({ loading, data, logOut }) => {
         return (
             <Wrapper>
                 <Helmet>
-                    <title>{username} | Prismagram</title>
+                    <title>{username} | Semicolon</title>
                 </Helmet>
                 <Header>
                     <HeaderColumn>
@@ -101,11 +152,11 @@ export default ({ loading, data, logOut }) => {
                             <Count>
                                 <FatText text={String(postsCount)} /> posts
               </Count>
-                            { <Count>
-                                <FatText text={String(followersCount)} /> followers
-              </Count> }
                             <Count>
-                                <FatText text={String(followingCount)} /> following
+                    <FatText text={String(followersCount)} /> {FollowerPopUp(followers)}
+              </Count>
+                            <Count>
+                                <FatText text={String(followingCount)} /> {FollowingPopUp(following)}
               </Count>
 
                         </Counts>
@@ -116,17 +167,86 @@ export default ({ loading, data, logOut }) => {
                 </Header>
                 <Posts>
                     {posts &&
-                        posts.map(post => (
-                            <SquarePost
-                                key={post.id}
+                posts.map(post => (
+                  <SquarePost
+                    key={post.id}
+                    postid={post.id}
                                 likeCount={post.likeCount}
                                 commentCount={post.commentCount}
                                 file={post.files[0]}
                             />
+                    
                         ))}
                 </Posts>
             </Wrapper>
         );
     }
     return null;
+};
+
+const FollowerPopUp = (followers) => {
+  const ref = useRef();
+  
+  return (
+    <div>
+      <Popup
+        ref={ref}
+        trigger={
+          <Count>
+            followers
+          </Count>
+        }
+      >
+        <div width="30%">
+        {followers && (
+          <Users>
+            {followers.map(follower => (
+              <User key={follower.id}>
+                <Avatar url={follower.avatar} />
+                <UserDetail>
+                  <FatText text={follower.username} />
+                  <FullNameF>{follower.fullName}</FullNameF>
+                </UserDetail>
+                <Div> <FollowButton isFollowing={follower.isFollowing} id={follower.id}/></Div>
+              </User>
+            ))}
+          </Users>
+          )}
+          </div>
+      </Popup>
+    </div>
+  );
+};
+
+const FollowingPopUp = (following) => {
+  const ref = useRef();
+  
+  return (
+    <div>
+      <Popup
+        ref={ref}
+        trigger={
+          <Count>
+            following
+          </Count>
+        }
+      >
+        {following && (
+          <Users>
+            {following.map(following => (
+              <User key={following.id}>
+                <Avatar url={following.avatar} />
+                <UserDetail>
+                <FatText text={following.username} />
+                  <FullNameF>{following.fullName}</FullNameF>
+                  </UserDetail>
+                <Div><FollowButton isFollowing={following.isFollowing} id={following.id}/></Div>
+              
+              </User>
+            ))}
+          </Users>
+        )}
+      </Popup>
+    </div>
+  );
 };
