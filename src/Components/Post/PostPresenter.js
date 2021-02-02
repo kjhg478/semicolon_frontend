@@ -4,7 +4,9 @@ import TextareaAutosize from "react-autosize-textarea";
 import FatText from "../FatText";
 import Avatar from "../Avatar";
 import { Link } from "react-router-dom";
-import { HeartFull, HeartEmpty, Comment as CommentIcon} from "../Icons";
+import { StarFull, StarEmpty, Comment as CommentIcon } from "../Icons";
+import { FaStar, FaRegStar } from "react-icons/fa";
+import Theme from "../../Styles/Theme";
 import Popup from 'reactjs-popup';
 import DetailPost from "../DetailPost/index";
 import "../../Styles/Post.css";
@@ -171,7 +173,7 @@ export default ({
       <Meta>
         <Buttons>
           <Button onClick={toggleLike}>
-            {isLiked ? <HeartFull /> : <HeartEmpty />}
+          {isLiked ? <FaStar size={26} color={Theme.starColor} /> : <FaRegStar size={26} />}
           </Button>
           <Button>
           
@@ -193,7 +195,8 @@ export default ({
             ))} */}
             {selfComments.map(comment => (
               <Comment key={comment.id}>
-                 <Link to={`/${comment.user.username}`}>
+                <Link to={`/${comment.user.username}`}>
+                  
                   <FatText text={comment.user.username} />
                   </Link>
                 {comment.text}

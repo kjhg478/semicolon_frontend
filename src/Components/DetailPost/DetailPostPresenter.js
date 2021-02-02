@@ -1,15 +1,19 @@
-import React, {useState} from "react";
+import React from "react";
 import styled from "styled-components";
-import TextareaAutosize from "react-autosize-textarea";
 import FatText from "../FatText";
 import Avatar from "../Avatar";
 import { Link } from "react-router-dom";
-import { HeartFull, HeartEmpty, Comment as CommentIcon } from "../Icons";
 import { IoEllipsisHorizontalSharp } from "react-icons/io5";
 import Popup from 'reactjs-popup';
-import BurgerIcon from "../../Styles/BurgerIcon";
+import { Comment as CommentIcon } from "../Icons";
 import "../../Styles/Menu.css";
 import Menu from "../Menu";
+import LikePresenter from "./LikePresenter";
+import CommentPresenter from "./CommentPresenter";
+import { FaStar, FaRegStar } from "react-icons/fa";
+import Theme from "../../Styles/Theme";
+import "../../Styles/PopUp.css";
+import MenuPopup from "../MenuPopup";
 
 const Post = styled.div`
   ${props => props.theme.whiteBox};
@@ -23,6 +27,27 @@ const Post = styled.div`
   flexDirection: row;
   
 `;
+
+const Div1 = styled.div`
+  margin-top:10px;
+  overflow-y: auto;
+  margin-top: -12px;
+  flexDirection: row;
+`;
+
+const Div2 = styled.div`
+        flex-shrink: 0;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    display: inline-flex;
+        align-items: flex-start;
+    flex-shrink: 1;
+    min-width: 0;
+    width: fit-content;
+`;
+
+
 
 const PostComment = styled.div`
   ${props => props.theme.whiteBox};
@@ -82,11 +107,14 @@ const Div = styled.div`
 
 const Button = styled.span`
   cursor: pointer;
-  
 `;
 
 const Meta = styled.div`
-  padding: 15px;
+    bottom: 0;
+    left: 0;
+    margin: 0px 7px;
+    right: 0;
+    top: 0;
 `;
 
 const Buttons = styled.div`
@@ -109,39 +137,37 @@ const Timestamp = styled.span`
   border-bottom: ${props => props.theme.lightGreyColor} 1px solid;
 `;
 
-const CommentCount = styled.span`
-  font-weight: 400;
-  opacity: 0.6;
-  display: block;
-  font-size: 12px;
-  margin: 5px 0px;
-  padding-bottom: 4px;
-`;
 
-const Textarea = styled(TextareaAutosize)`
+
+const Textarea = styled.textarea`
   border: none;
   width: 100%;
   resize: none;
-  font-size: 14px;
+  font-size: 12px;
   &:focus {
     outline: none;
+      resize: none;
+
   }
   font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 `;
 
-
-
 const Comments = styled.ul`
   height:340px;
   margin-top:10px;
-  
+  overflow-y: auto;
 `;
-
+const Div3 = styled.div`
+      margin-bottom: 5px;
+    margin-top: 10px;
+`
 const Comment = styled.li`
   margin-bottom:7px;
+ 
   span{
     margin-right:5px;
   }
+  
   resize: none;
 `;
 
@@ -150,11 +176,6 @@ const Caption = styled.div`
   margin-bottom : 20px;   
 `;
 
-const styles = {
-  fontFamily: "sans-serif",
-  textAlign: "center",
-  marginTop: "40px"
-};
 const contentStyle = {
   background: "rgba(255,255,255,0)",
   width: "80%",
@@ -168,7 +189,6 @@ export default ({
   location,
   files,
   isLiked,
-  commentLike,
   likeCount,
   createdAt,
   newComment,
@@ -178,11 +198,7 @@ export default ({
   onKeyUp,
   comments,
   delComment,
-  commentLiked,
-  replyComment,
-  modifyComment,
-  openRelpy,
-
+  setSelfComments
 }) => (
   <Div>
   <Post>
@@ -209,49 +225,44 @@ export default ({
         <Caption><FatText text={username} /> {caption}</Caption>
 
       {comments && (
-        <Comments>
-          {comments.map((comment, index, event) => (
+        <Comments className={"commentsBox"}>
+          {comments.map((comment, index) => (
             <Comment key={comment.id} index={index}>
+              
               <FatText text={comment.user.username} />
+              <Div2>
               {comment.text}
+              </Div2>
+              <Div1>
               <Button>
-                {popupMenu(id)}
+                <MenuPopup setSelfComments={setSelfComments} id={comment.id} comments={comments }/>
+                {/* {popupMenu(comment.id, comments)} */}
               </Button>
-              <Button onClick={() => delComment(comment.id, index)}>
+              {/* <Button onClick={() => delComment(comment.id)}>
                 삭제
-              </Button>
-              <Button onClick={() => replyComment(comment.id, comment.user.username, event)}>
-                답글 달기
-              </Button>
-              <Button onClick={() => commentLiked(comment.id)}>
-                {commentLike ? <HeartFull /> : <HeartEmpty />}
-              </Button>
-              {openRelpy &&
-              <Textarea
-                placeholder={"Add a comment..."}
-                value={newComment.value}
-                onChange={newComment.onChange}
-                onKeyPress={onKeyUp}
-              />
-          }
- 
+              </Button> */}
+              
+              <LikePresenter commentId={comment.id} isCommented={comment.isCommented} />
+              </Div1>         
 
               <Timestamp>{createdAt}</Timestamp>
               </Comment>
             ))}
-
           </Comments>
+          
       )}
-
+        
         <Buttons>
+          <Div3>
         <Button onClick={toggleLike}>
-          {isLiked ? <HeartFull /> : <HeartEmpty />}
+            {isLiked ? <FaStar size={26} color={Theme.starColor } /> : <FaRegStar size={26} />}
           </Button>
           
         <Button>
           
           <CommentIcon />
-          </Button>
+            </Button>
+            </Div3>
           
         </Buttons>
         <FatText text={likeCount === 1 ? "1 like" : `${likeCount} likes`} />
@@ -268,19 +279,19 @@ export default ({
 );
 
 
-
-const popupMenu = () => (
+// const popupMenu = (commentId, comments) => (
     
-    <Popup
-      modal
-      overlayStyle={{ background: "rgba(255,255,255,0.8" }}
-      contentStyle={contentStyle}
-      closeOnDocumentClick={false}
-      trigger={(open) => <IoEllipsisHorizontalSharp open={open} />}
-    >
+//     <Popup
+    
+//     modal
+//     overlayStyle={{ background: "rgba(0,0,0,0.7" }}
+//     contentStyle={contentStyle}
+//     closeOnDocumentClick={false}
+//     trigger={(open) => <Div1 className={"Box"}><IoEllipsisHorizontalSharp size={16} open={open} /></Div1>}
+//     >
 
 
-      {(close) => <Menu close={close} />}
-    </Popup>
+//       {(close) => <Menu close={close} commentId={commentId} comments={comments} />}
+//     </Popup>
   
-);
+// );

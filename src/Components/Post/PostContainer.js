@@ -5,6 +5,7 @@ import PostPresenter from "./PostPresenter";
 import { useMutation } from "react-apollo-hooks";
 import { TOGGLE_LIKE, ADD_COMMENT, DELETE_COMMENT } from "./PostQueries";
 import { toast } from "react-toastify";
+import { FEED_QUERY } from "../../Routes/Feed";
 
 
 const PostContainer = ({
@@ -17,8 +18,10 @@ const PostContainer = ({
   createdAt,
   caption,
   location,
-  avatar
+  avatar,
+  // isCommented
 }) => {
+  // console.log(comments.id)
   const [isLikedS, setIsLiked] = useState(isLiked);
   const [likeCountS, setLikeCount] = useState(likeCount);
   const [currentItem, setCurrentItem] = useState(0);
@@ -28,7 +31,7 @@ const PostContainer = ({
   });
   const [selfComments, setSelfComments] = useState([]);
   const [addCommentMutation] = useMutation(ADD_COMMENT, {
-    variables: { postId: id, text: comment.value }
+    variables: { postId: id, text: comment.value }, refetchQueries: [{query:FEED_QUERY}]
   });
   const slide = () => {
     const totalFiles = files.length;
@@ -61,7 +64,7 @@ const PostContainer = ({
         const {
           data: { addComment }
         } = await addCommentMutation();
-        setSelfComments([...selfComments, addComment]);
+        // setSelfComments([...selfComments, addComment]);
         comment.setValue("");
       } catch {
         toast.error("Can't send comment 😔");
@@ -87,6 +90,7 @@ const PostContainer = ({
       onKeyUp={onKeyUp}
       avatar={avatar}
       selfComments={selfComments}
+      // isCommented={isCommented}
     />
   );
 };
@@ -108,6 +112,7 @@ PostContainer.propTypes = {
   isLiked: PropTypes.bool.isRequired,
   comments: PropTypes.arrayOf(
     PropTypes.shape({
+      isCommented:PropTypes.bool.isRequired,
       id: PropTypes.string.isRequired,
       text: PropTypes.string.isRequired,
       user: PropTypes.shape({
@@ -117,6 +122,7 @@ PostContainer.propTypes = {
     })
   ).isRequired,
   caption: PropTypes.string.isRequired,
+  // isCommented:PropTypes.string.isRequired,
   location: PropTypes.string,
   createdAt: PropTypes.string.isRequired
 };

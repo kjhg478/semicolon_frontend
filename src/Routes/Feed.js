@@ -6,7 +6,7 @@ import Loader from "../Components/Loader";
 import Post from "../Components/Post";
 import { Helmet } from "rl-react-helmet";
 
-const FEED_QUERY = gql`
+export const FEED_QUERY = gql`
   {
     seeFeed {
       id
@@ -23,14 +23,15 @@ const FEED_QUERY = gql`
       }
       likeCount
       isLiked
-      commentLike
       comments {
         id
         text
+        isCommented
         user {
           id
           username
         }
+        
       }
       createdAt
     }
@@ -60,8 +61,9 @@ export default () => {
                     avatar={post.user.avatar}
                     isLiked={post.isLiked}
                     comments={post.comments}
-                createdAt={post.createdAt}
-                commentLike={post.commentLike}
+                    createdAt={post.createdAt}
+                    // isCommented={post.comments.isCommented}
+                   
                 />)}
         </Wrapper>);
 };
