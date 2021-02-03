@@ -5,7 +5,8 @@ import Input from "./Input";
 import useInput from "../Hooks/useInput";
 import { Compass, HeartEmpty, User, Logo } from "./Icons";
 import { useQuery } from "react-apollo-hooks";
-import { ME } from "../SharedQueries";
+import { ME, GET_TODAYINFO } from "../SharedQueries";
+import EnventInfoContainer from "../Components/EventInfo";
 
 const Header = styled.header`
   width: 100%;
@@ -70,13 +71,23 @@ export default withRouter(({ history }) => {
     e.preventDefault();
     history.push(`/search?term=${search.value}`);
   };
+  
+ const { data:todayData } = useQuery(GET_TODAYINFO, {
+      variables: {
+          location: "incheon",
+          latitude: 37.4111,
+          longitude: 126.7111
+        }
+ });
+  
   return (
     <Header>
       <HeaderWrapper>
         <HeaderColumn>
-          <Link to="/">
+          <Link to="/" style={{marginRight:30}}>
             <Logo />
           </Link>
+            {todayData && <EnventInfoContainer location={todayData.todayInfo.countryName} data={todayData.todayInfo.newCase} temp={todayData.todayInfo.temp} weather={todayData.todayInfo.weather} />}
         </HeaderColumn>
         <HeaderColumn>
           <form onSubmit={onSearchSubmit}>
@@ -92,7 +103,8 @@ export default withRouter(({ history }) => {
             <Compass />
           </HeaderLink>
           <HeaderLink to="/notifications">
-            <HeartEmpty />
+            {/* <Ionicons name="notifications-outline" size={24} color="black" /> */}
+             <HeartEmpty />
           </HeaderLink>
           {!data ? (<HeaderLink to="/#">
               <User />

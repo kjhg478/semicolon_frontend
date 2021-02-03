@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 const Text = styled.span`
   font-weight: 600;
-  margin-right: 5px;
+
 `;
 
 const FatText = ({ text, className }) => (

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { HeartFull, CommentFull } from "./Icons";
@@ -29,6 +29,8 @@ const Container = styled.div`
   }
 `;
 
+
+
 const Number = styled.div`
   color: white;
   display: flex;
@@ -44,25 +46,25 @@ const NumberText = styled.span`
 `;
 
 const SquarePost = ({ postid, likeCount, commentCount, file }) => (
-
   <Container bg={file.url}>
-    <Link to={`/post/${postid}`}>   
-    <Overlay>
-      <Number>
-        <HeartFull />
-        <NumberText>{likeCount}</NumberText>
-      </Number>
+   <Link to={`/post/${postid}`}>
+        <Overlay>
+          <Number>
+            <HeartFull />
+            <NumberText>{likeCount}</NumberText>
+          </Number>
       
-      <Number>
-        <CommentFull />
-        <NumberText>{commentCount}</NumberText>
-      </Number>
+          <Number>
+            <CommentFull />
+            <NumberText>{commentCount}</NumberText>
+          </Number>
       </Overlay>
       </Link>
-    </Container>
+  </Container>
 );
 
 SquarePost.propTypes = {
+    postid:PropTypes.string.isRequired,
     likeCount: PropTypes.number.isRequired,
     commentCount: PropTypes.number.isRequired,
     file: PropTypes.shape({

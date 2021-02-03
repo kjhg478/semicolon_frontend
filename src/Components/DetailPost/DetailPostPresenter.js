@@ -35,18 +35,32 @@ const Div1 = styled.div`
   flexDirection: row;
 `;
 
+//종훈 댓글
 const Div2 = styled.div`
-        flex-shrink: 0;
-    margin: 0;
-    padding: 0;
-    position: relative;
-    display: inline-flex;
-        align-items: flex-start;
-    flex-shrink: 1;
-    min-width: 0;
-    width: fit-content;
-`;
+      flex-wrap: wrap;
+    width: 70%;
+    overflow: auto;
+    height: 30px;
+    word-break: break-all;
+    overflow-y: hidden;
+     margin: 0;
+padding: 0;
+position: relative;
+display: inline-flex;
+align-items: flex-start;
+flex-shrink: 1;
 
+`;
+    //     flex-shrink: 0;
+    // margin: 0;
+    // padding: 0;
+    // position: relative;
+    // display: inline-flex;
+    //     align-items: flex-start;
+    // flex-shrink: 1;
+    // min-width: 0;
+    // width: fit-content;
+// const Div3 
 
 
 const PostComment = styled.div`

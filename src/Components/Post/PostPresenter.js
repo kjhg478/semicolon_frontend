@@ -9,7 +9,7 @@ import { FaStar, FaRegStar } from "react-icons/fa";
 import Theme from "../../Styles/Theme";
 import Popup from 'reactjs-popup';
 import DetailPost from "../DetailPost/index";
-import "../../Styles/Post.css";
+import "../../Styles/PopUp.css";
 
 const Post = styled.div`
   ${props => props.theme.whiteBox};
@@ -110,13 +110,6 @@ const Comment = styled.li`
   }
 `;
 
-// const Caption = styled.div`
-//   margin-top : 15px;
-//   margin-left : 10px;
-//   margin-bottom:7px;
-// `;
-
-
 const Caption = styled.div`
   margin : 10px 0px
 `;
@@ -130,10 +123,6 @@ const CommentCount = styled.span`
   padding-bottom: 4px;
   cursor: pointer;
 `;
-
-
-
-
 
 export default ({
     user: { username, avatar },
@@ -169,7 +158,6 @@ export default ({
             <File key={file.id} src={file.url} showing={index === currentItem} />
           ))}
       </Files>
-      {/* <Caption>{caption}</Caption>  */}
       <Meta>
         <Buttons>
           <Button onClick={toggleLike}>
@@ -185,14 +173,6 @@ export default ({
         {PopupPost(id,user,files,likeCount,caption,avatar,isLiked,comments,createdAt)}
         {comments && (
           <Comments>
-            {/* {comments.map(comment => (
-              <Comment key={comment.id}>
-                <Link to={`/${comment.user.username}`}>
-                  <FatText text={comment.user.username} />
-                  </Link>
-                {comment.text}
-              </Comment>
-            ))} */}
             {selfComments.map(comment => (
               <Comment key={comment.id}>
                 <Link to={`/${comment.user.username}`}>

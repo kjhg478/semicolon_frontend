@@ -11,6 +11,8 @@ const GET_USER = gql`
       avatar
       username
       fullName
+      firstName
+      lastName
       isFollowing
       isSelf
       bio
@@ -32,6 +34,7 @@ const GET_USER = gql`
       followersCount
       postsCount
       posts {
+        state
         id
         files {
           url

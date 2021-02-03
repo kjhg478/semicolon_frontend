@@ -6,7 +6,7 @@ import Feed from "../Routes/Feed";
 import Profile from "../Routes/Profile/index";
 import Explore from "../Routes/Explore";
 import Search from "../Routes/Search";
-import DetailPost from "../Routes/DetailPost";
+import DetailPost from "../Routes/DetailPost/index";
 
 const LoggedInRoutes = () => (
   <Switch>
@@ -14,7 +14,7 @@ const LoggedInRoutes = () => (
     <Route exact path="/explore" component={Explore} />
     <Route exact path="/search" component={Search} />
     <Route exact path="/:username" component={Profile} />
-    <Route exact path="/post/:postid" component={DetailPost} />
+    <Route exact path="/post/:id" component={DetailPost} />
     <Redirect from="*" to="/" />
   </Switch>
 );

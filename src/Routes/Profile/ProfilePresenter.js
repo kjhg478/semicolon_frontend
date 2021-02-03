@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import { Helmet } from "rl-react-helmet";
 import Loader from "../../Components/Loader";
@@ -9,8 +9,9 @@ import SquarePost from "../../Components/SquarePost";
 import Button from "../../Components/Button";
 import { Link } from "react-router-dom";
 import Popup from 'reactjs-popup'; 
-//import "../../Styles/PopUp.css";
-
+import EditProfile from "./EditProfile";
+import { Setting } from "../../Components/Icons";
+import "../../Styles/PopUp.css";
 
 const Users = styled.ul`
   margin-top:10px;
@@ -24,11 +25,6 @@ const User = styled.li`
   display : flex;
   border-bottom: ${props => props.theme.lightGreyColor} 1px solid;
 `;
-
-const Caption = styled.div`
-  margin : 10px 0px
-`;
-
 
 const Wrapper = styled.div`
   min-height: 100vh;
@@ -50,26 +46,31 @@ width : 60px;
 align-items: right; 
 text-align:right;
 margin-left:auto;
-
  `;
-
 
 const UsernameRow = styled.div`
   display: flex;
   align-items: center;
 `;
-
+const NameDiv = styled.div`
+width: 200px;
+    overflow: hidden;
+`;
 const Username = styled.span`
   font-size: 26px;
   display: block;
 `;
-
+const Button1 = styled.span`
+  cursor: pointer;
+`;
+const IconDiv = styled.div``;
 const Counts = styled.ul`
   display: flex;
   margin: 15px 0px;
 `;
 
 const Count = styled.li`
+  text-align: center;
   font-size: 16px;
   &:not(:last-child) {
     margin-right: 10px;
@@ -93,10 +94,9 @@ const FullNameF = styled.span`
   font-size: 12px;
   margin: 10px 0px;
   padding-bottom: 10px;
-  
   width: 90px;
-    overflow: hidden;
-    height: 13px
+  overflow: hidden;
+  height: 13px
 `;
 
 const UserDetail = styled.div`
@@ -117,72 +117,96 @@ export default ({ loading, data, logOut }) => {
             </Wrapper>
         );
     } else if (!loading && data && data.seeUser) {
+    const [editProfile, setEditProfile] = useState(false);
+      
+      const editClick = (e) => {
+      setEditProfile(e => !e)
+    }
         const {
             seeUser: {
-                id,
-            avatar,
-                username,
-                fullName,
-            isFollowing,
+              id,
+              avatar,
+              firstName,
+              lastName,
+              isFollowing,
+              isSelf,
+            bio,
             followers,
-                following,
-                isSelf,
-                bio,
-                followingCount,
-                followersCount,
-                postsCount,
-                posts
+              following,
+              followingCount,
+              followersCount,
+              postsCount,
+              posts,
+              username
             }
-        } = data;
-        return (
-            <Wrapper>
-                <Helmet>
-                    <title>{username} | Semicolon</title>
-                </Helmet>
-                <Header>
-                    <HeaderColumn>
-                        <Avatar size="lg" url={avatar} />
-                    </HeaderColumn>
-                    <HeaderColumn>
-                        <UsernameRow>
-                            <Username>{username}</Username>{" "}
+      } = data;
 
-                        </UsernameRow>
-                        <Counts>
-                            <Count>
-                                <FatText text={String(postsCount)} /> posts
-              </Count>
-                            <Count>
-                    <FatText text={String(followersCount)} /> {FollowerPopUp(followers)}
-              </Count>
-                            <Count>
-                                <FatText text={String(followingCount)} /> {FollowingPopUp(following)}
-              </Count>
+      const [userInfo, setUserInfo] = useState({
+        username,
+      avatar,
+      firstName,
+      lastName,
+      bio,
+      });
+      // !editProfile ?
+      //   (
+      return (<Wrapper>
+          <Helmet>
+            <title>{username} | Semicolon</title>
+          </Helmet>
+          <Header>
+            <HeaderColumn>
+              <Avatar size="lg" url={avatar} />
+            </HeaderColumn>
+            <HeaderColumn>
+              <UsernameRow>
+                <NameDiv>
+                  <Username>{userInfo.username}</Username>{" "}
+                </NameDiv>
+                <IconDiv>
+                  <Button1 onClick={() => { editClick() }} >
+                    <Setting />
+                  </Button1>
+                </IconDiv>
 
-                        </Counts>
-                        <FullName text={fullName} />
-                        <Bio>{bio}</Bio>
-                {isSelf ? <Button onClick={logOut} text="Log Out"/> : <FollowButton isFollowing={isFollowing} id={id} />}
-                    </HeaderColumn>
-                </Header>
-                <Posts>
-                    {posts &&
-                posts.map(post => (
-                  <SquarePost
-                    key={post.id}
-                    postid={post.id}
-                                likeCount={post.likeCount}
-                                commentCount={post.commentCount}
-                                file={post.files[0]}
-                            />
-                    
-                        ))}
-                </Posts>
-            </Wrapper>
+              </UsernameRow>
+              <Counts>
+                <Count>
+                  <FatText text={String(postsCount)} /> <UserDetail>posts</UserDetail>
+                </Count>
+                <Count>
+                  <FatText text={String(followersCount)} /> {FollowerPopUp(followers)}
+                </Count>
+                <Count>
+                  <FatText text={String(followingCount)} /> {FollowingPopUp(following)}
+                </Count>
+
+              </Counts>
+              <FullName text={userInfo.firstName + userInfo.lastName} />
+              <Bio>{userInfo.bio}</Bio>
+              {isSelf ? <Button onClick={logOut} text="Log Out" /> : <FollowButton isFollowing={isFollowing} id={id} />}
+            </HeaderColumn>
+          </Header>
+          <Posts>
+            {posts && posts.map(post => {
+              if (post.state === "1") {
+                return <SquarePost
+                  key={post.id}
+                  postid={post.id}
+                  likeCount={post.likeCount}
+                  commentCount={post.commentCount}
+                  file={post.files[0]}
+                />
+              }
+            })}
+          </Posts>
+        </Wrapper>
         );
-    }
-    return null;
+  }
+  return null;
 };
+// ) : (<EditProfile data={data.seeUser} setUserInfo={setUserInfo} userInfo={userInfo} setEditProfile={setEditProfile} />
+//           )
 
 const FollowerPopUp = (followers) => {
   const ref = useRef();
@@ -190,6 +214,7 @@ const FollowerPopUp = (followers) => {
   return (
     <div>
       <Popup
+        className={"fpopup"}
         ref={ref}
         trigger={
           <Count>
@@ -224,6 +249,7 @@ const FollowingPopUp = (following) => {
   return (
     <div>
       <Popup
+        className={"fpopup"}
         ref={ref}
         trigger={
           <Count>

@@ -7,3 +7,15 @@ export const ME = gql`
     }
   }
 `;
+
+// 오늘의 정보
+export const GET_TODAYINFO = gql`
+  query todayInfo($location:String!, $latitude: Float! , $longitude:Float!) {
+    todayInfo(location:$location, latitude: $latitude, longitude:$longitude){
+        countryName
+        newCase
+        temp 
+        weather
+        }
+    }
+`;

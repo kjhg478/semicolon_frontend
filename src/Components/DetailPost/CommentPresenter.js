@@ -22,7 +22,6 @@ const Textarea = styled(TextareaAutosize)`
 `;
 
 const CommentPresenter = ({ commentId, open }) => {
-    console.log(commentId);
     const [state, setState] = useState(true);
     const [myId, setMyId] = useState(commentId);
     const [selectedId, setSelectedId] = useState();

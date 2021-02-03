@@ -19,19 +19,6 @@ const LikePresenter = ({ commentId, isCommented }) => {
     });
 
     const [state, setState] = useState(isCommented);
-    console.log(isCommented)
-    // const [myId, setMyId] = useState(commentId);
-    // const [selectedId, setSelectedId] = useState();
-
-    // const setArr = () => {
-    //     comparing();
-    //     console.log('2',comment)
-    //    if (selectedId === myId) {
-    //        setSelectedId("default");  
-    //     } else { 
-    //        setSelectedId(myId);
-    //     }
-    // }
     const comparing = () => {
         CommentLikeMutation();
         if (state === true) {

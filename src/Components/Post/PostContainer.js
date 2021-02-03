@@ -18,10 +18,8 @@ const PostContainer = ({
   createdAt,
   caption,
   location,
-  avatar,
-  // isCommented
+  avatar
 }) => {
-  // console.log(comments.id)
   const [isLikedS, setIsLiked] = useState(isLiked);
   const [likeCountS, setLikeCount] = useState(likeCount);
   const [currentItem, setCurrentItem] = useState(0);
@@ -64,7 +62,6 @@ const PostContainer = ({
         const {
           data: { addComment }
         } = await addCommentMutation();
-        // setSelfComments([...selfComments, addComment]);
         comment.setValue("");
       } catch {
         toast.error("Can't send comment 😔");
@@ -90,7 +87,6 @@ const PostContainer = ({
       onKeyUp={onKeyUp}
       avatar={avatar}
       selfComments={selfComments}
-      // isCommented={isCommented}
     />
   );
 };
@@ -122,7 +118,6 @@ PostContainer.propTypes = {
     })
   ).isRequired,
   caption: PropTypes.string.isRequired,
-  // isCommented:PropTypes.string.isRequired,
   location: PropTypes.string,
   createdAt: PropTypes.string.isRequired
 };

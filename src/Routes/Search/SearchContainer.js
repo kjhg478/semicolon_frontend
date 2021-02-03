@@ -12,6 +12,5 @@ export default withRouter(({ location: { search } }) => {
       term:decodeURI(term)
     }
   });
-  console.log( data );
   return <SearchPresenter searchTerm={term} loading={loading} data={data} />;
 });

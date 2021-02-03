@@ -73,17 +73,6 @@ const PostContainer = ({
       
     }
   };
-  // const delComment = async (comments, num) => {
-  //   console.log('1', comments, num);
-    
-  //   await removeCommentMutation({ variables: { id: comments } })
-
-  //   // setSelfComments(...selfComments.filter((selfComments) => {
-  //   // return selfComments.id !== comments;
-  //   // }))
-  //   setSelfComments([...selfComments].filter(comment => comment.id !== comments))
-  //   console.log('2', selfComments);
-  // }
  
   return (
     <PostPresenter
