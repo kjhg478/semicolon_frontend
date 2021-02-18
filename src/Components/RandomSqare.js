@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { HeartFull, CommentFull } from "./Icons";
-import { FaStar, FaRegStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const Overlay = styled.div`
@@ -51,7 +50,7 @@ const SquarePost = ({ postid, likeCount, commentCount, file }) => (
    <Link to={`/post/${postid}`}>
         <Overlay>
           <Number>
-          <FaStar size={28} />
+            <HeartFull />
             <NumberText>{likeCount}</NumberText>
           </Number>
       

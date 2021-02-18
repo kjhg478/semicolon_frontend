@@ -171,10 +171,9 @@ export default ({
         <Button onClick={toggleLike}>
           {isLiked ? <FaStar size={26} color={Theme.starColor} /> : <FaRegStar size={26} />}
         </Button>
-        <Button>
+{UpPost(id, user, files, likeCount, caption, avatar, isLiked, comments, createdAt, isSelf)}
+       
 
-          <CommentIcon />
-        </Button>
       </Buttons>
       <FatText text={likeCount === 1 ? "1 like" : `${likeCount} likes`} />
       <Caption><FatText text={username} /> {caption} </Caption>
@@ -211,12 +210,50 @@ const TagsInput = props => {
         {tag.map((tag, index) => (
           <li key={index} className="tag">
             <a className='tag-title' href={`http://localhost:3000/#/search?term=${tag.tag}`}>;{tag.tag}</a>
+            {/* https://teamsemi.netlify.app/#/search?term=${tag.tag} */}
           </li>
         ))}
       </ul>
     </div>
   );
 };
+
+const UpPost = (id, user, files, likeCount, caption, avatar, isLiked, comments, createdAt, isSelf) => (
+  <Popup trigger={ <Button>
+
+          <CommentIcon />
+        </Button>} modal nested>
+    {close => (
+      <div className="modal">
+        
+        <button className="close" onClick={close}>
+          &times;
+        </button>
+
+        <div className="content">
+          {' '}
+          <DetailPost
+            close={close}
+            isSelf={isSelf}
+            key={id}
+            id={id}
+            user={user}
+            files={files}
+            likeCount={likeCount}
+            caption={caption}
+            avatar={avatar}
+            isLiked={isLiked}
+            comments={comments}
+            createdAt={createdAt}
+          />
+        </div>
+        <div className="actions">
+
+        </div>
+      </div>
+    )}
+  </Popup>
+);
 
 const PopupPost = (id, user, files, likeCount, caption, avatar, isLiked, comments, createdAt, isSelf) => (
   <Popup trigger={comments.length > 0 && <CommentCount>댓글 {comments.length}개 더보기</CommentCount>} modal nested>
