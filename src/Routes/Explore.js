@@ -8,18 +8,18 @@ import { useQuery } from "react-apollo-hooks";
 import { gql } from "apollo-boost";
 
 export const RECOMMEND_QUERY = gql`
-{
-  getRecommendation{
-    id
-    caption
-    location
-    files{
-      url
+  {
+    getRecommendation {
+      id
+      caption
+      location
+      files {
+        url
+      }
+      likeCount
+      commentCount
     }
-    likeCount
-    commentCount
   }
-}
 `;
 
 const Wrapper = styled.div`
@@ -45,9 +45,11 @@ const PostSection = styled(Section)`
 `;
 
 export default withRouter(() => {
-    const { data, loading } = useQuery(RECOMMEND_QUERY, {fetchPolicy: "network-only"});
+  const { data, loading } = useQuery(RECOMMEND_QUERY, {
+    fetchPolicy: "network-only",
+  });
 
-    if (loading === true) {
+  if (loading === true) {
     return (
       <Wrapper>
         <Loader />
@@ -60,9 +62,9 @@ export default withRouter(() => {
           {data.getRecommendation.length === 0 ? (
             <FatText text="No Posts Found" />
           ) : (
-           data.getRecommendation.map(post => (
-             <SquarePost
-               postid={post.id}
+            data.getRecommendation.map((post) => (
+              <SquarePost
+                postid={post.id}
                 key={post.id}
                 likeCount={post.likeCount}
                 commentCount={post.commentCount}

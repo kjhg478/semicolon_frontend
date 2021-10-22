@@ -19,20 +19,21 @@ const PostContainer = ({
   location,
   isSelf,
   close,
-  avatar
+  avatar,
 }) => {
   const [isLikedS, setIsLiked] = useState(isLiked);
   const [likeCountS, setLikeCount] = useState(likeCount);
   const [currentItem, setCurrentItem] = useState(0);
   const [toggleLikeMutation] = useMutation(TOGGLE_LIKE, {
-    variables: { postId: id }
+    variables: { postId: id },
   });
 
   const comment = useInput("");
   const [selfComments, setSelfComments] = useState([...comments]);
 
   const [addCommentMutation] = useMutation(ADD_COMMENT, {
-    variables: { postId: id, text: comment.value }, refetchQueries: [{ query: FEED_QUERY }]
+    variables: { postId: id, text: comment.value },
+    refetchQueries: [{ query: FEED_QUERY }],
   });
 
   const slide = () => {
@@ -58,26 +59,25 @@ const PostContainer = ({
     }
   };
 
-  const onKeyUp = async event => {
+  const onKeyUp = async (event) => {
     const { which } = event;
     if (which === 13) {
       event.preventDefault();
       try {
         const {
-          data: { addComment }
+          data: { addComment },
         } = await addCommentMutation();
         setSelfComments([...selfComments, addComment]);
         comment.setValue("");
       } catch {
         toast.error("Can't send comment 😔");
       }
-
     }
   };
 
   return (
     <PostPresenter
-    isSelf={isSelf}
+      isSelf={isSelf}
       close={close}
       isSelf={isSelf}
       id={id}
@@ -98,8 +98,6 @@ const PostContainer = ({
       avatar={avatar}
       // delComment={delComment}
       setSelfComments={setSelfComments}
-
-
     />
   );
 };
@@ -109,12 +107,12 @@ PostContainer.propTypes = {
   user: PropTypes.shape({
     id: PropTypes.string.isRequired,
     avatar: PropTypes.string,
-    username: PropTypes.string.isRequired
+    username: PropTypes.string.isRequired,
   }).isRequired,
   files: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
-      url: PropTypes.string.isRequired
+      url: PropTypes.string.isRequired,
     })
   ).isRequired,
   likeCount: PropTypes.number.isRequired,
@@ -126,13 +124,13 @@ PostContainer.propTypes = {
       text: PropTypes.string.isRequired,
       user: PropTypes.shape({
         id: PropTypes.string.isRequired,
-        username: PropTypes.string.isRequired
-      }).isRequired
+        username: PropTypes.string.isRequired,
+      }).isRequired,
     })
   ).isRequired,
   caption: PropTypes.string.isRequired,
   location: PropTypes.string,
-  createdAt: PropTypes.string.isRequired
+  createdAt: PropTypes.string.isRequired,
 };
 
 export default PostContainer;

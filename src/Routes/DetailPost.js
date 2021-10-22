@@ -1,4 +1,3 @@
-
 // import React from "react";
 // import ReactDOM from "react-dom";
 
@@ -35,7 +34,7 @@ export default () => "디테일임^^";
 //         <button onClick={this.togglePopup.bind(this)}>show popup</button>
 //         <button onClick={() => {alert('woooooooot?');}}>try me when popup is open</button>
 //         <p>Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br />Ganz viel inhalt.<br /></p>
-//         {this.state.showPopup ? 
+//         {this.state.showPopup ?
 //           <Popup
 //             text='Close Me'
 //             closePopup={this.togglePopup.bind(this)}
@@ -47,13 +46,10 @@ export default () => "디테일임^^";
 //   }
 // };
 
-
-
 // ReactDOM.render(
 //   <App />,
 //   document.getElementById('content')
 // );
-
 
 // import React from "react";
 // import styled from "styled-components";
@@ -187,7 +183,7 @@ export default () => "디테일임^^";
 //       caption
 //       user {
 //         id
-//         avatar 
+//         avatar
 //         username
 //       }
 //       files {
@@ -207,7 +203,7 @@ export default () => "디테일임^^";
 //       createdAt
 //     }
 //   }
- 
+
 // `;
 
 // export default withRouter(({ match: { params: { postid } } }) => {
